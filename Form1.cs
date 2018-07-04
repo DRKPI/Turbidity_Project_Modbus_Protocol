@@ -64,8 +64,9 @@ namespace Turbidity
                 MessageBox.Show("Serial Port could not be opended." + Environment.NewLine +
                     "Verify the config file is written in the correct format." + Environment.NewLine +
                     " See log file for details. ", "Error Message", MessageBoxButtons.OK);
+                this.Close();
             }
-        }// end Function FormMain_Load
+        }// end Function Form1_Load
 
         /// <summary>
         /// Timer to continually request new Turbidity reading
@@ -77,7 +78,7 @@ namespace Turbidity
         {
             StartProcess();
         }
-
+       
         /// <summary>
         /// Start the process of gathering Turbidity reading
         /// Ends with displaying Turbidity reading to txtReceivedMsg.Text
@@ -114,5 +115,9 @@ namespace Turbidity
             //Print turbidity number to screen
             txtReceivedMsg.Text = turbidity.turbidNum;
         }
+
+       
     }
 }
+
+//TODO - add edit options to form (include com port, baud rate, sync time (1min - 60min))

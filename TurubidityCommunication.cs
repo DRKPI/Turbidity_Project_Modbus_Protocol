@@ -11,7 +11,7 @@ namespace Turbidity
 {
     class TurbidityCommunication
     {
-        const bool DEBUG = true;
+        const bool DEBUG = false;
         private static SerialPort sp = null;
         public byte[] buffRec { get; private set; }
         public byte[] message { get; private set; } = new byte[8];
@@ -98,8 +98,8 @@ namespace Turbidity
                     + Environment.NewLine + "\tPlease make sure no extra lines are after the \"Time Interval\""
                     + Environment.NewLine
                     + Environment.NewLine + "*********CONFIGURATION INFORMATION*********"
-                    + Environment.NewLine + "COM PORT	BAUD RATE	TIME INTERVAL"
-                    + Environment.NewLine + "COM3		9600		60";
+                    + Environment.NewLine + "COM PORT\tBAUD RATE\tTIME INTERVAL"
+                    + Environment.NewLine + "COM3\t\t9600\t\t60";
                     //Write to file
                     using (StreamWriter file = new StreamWriter(path))
                     {
