@@ -64,7 +64,7 @@ namespace Turbidity
                 MessageBox.Show("Serial Port could not be opended." + Environment.NewLine +
                     "Verify the config file is written in the correct format." + Environment.NewLine +
                     " See log file for details. ", "Error Message", MessageBoxButtons.OK);
-                this.Close();
+                //this.Close();
             }
         }// end Function Form1_Load
 
@@ -111,12 +111,14 @@ namespace Turbidity
                 MessageBox.Show("Error writing turbidity number out to file."
                     + Environment.NewLine + "See log file for details.", "Error Message", MessageBoxButtons.OK);
             }
-
             //Print turbidity number to screen
             txtReceivedMsg.Text = turbidity.turbidNum;
         }
 
-       
+        private void button2_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
 

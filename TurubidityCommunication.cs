@@ -11,7 +11,7 @@ namespace Turbidity
 {
     class TurbidityCommunication
     {
-        const bool DEBUG = false;
+        const bool DEBUG = true;
         private static SerialPort sp = null;
         public byte[] buffRec { get; private set; }
         public byte[] message { get; private set; } = new byte[8];
@@ -95,7 +95,7 @@ namespace Turbidity
                     + Environment.NewLine + "\tThis can be anytime from 1 min up to 60 min."
                     + Environment.NewLine
                     + Environment.NewLine + "Important Notes - There cannot be an empty/blank line at the end of file. The program will not read in data correctly."
-                    + Environment.NewLine + "\tPlease make sure no extra lines are after the \"Time Interval\""
+                    + Environment.NewLine + "\tPlease make sure no extra lines and/or spaces are after the \"Time Interval\""
                     + Environment.NewLine
                     + Environment.NewLine + "*********CONFIGURATION INFORMATION*********"
                     + Environment.NewLine + "COM PORT\tBAUD RATE\tTIME INTERVAL"
@@ -356,7 +356,6 @@ namespace Turbidity
             string dateTimeStamp = DateTime.Now.ToString("MM/dd/yyyy HH:mm");
             string year = DateTime.Parse(DateTime.Now.ToString()).Year.ToString();
             string path = year + "_Turbidity_Readings.txt";
-
             errorMessage = String.Empty;
 
             //Check if file exist, if not then create file with header information
@@ -365,13 +364,13 @@ namespace Turbidity
             try
             {
                 //If config.txt does not exist create with the following information
-                if (!File.Exists(year + path))
+                if (!File.Exists(path))
                 {
                     //Create default text to write to file
                     string defaultTurbidReadingFile = "Turbidity Numbers Received from Controller"
                     + Environment.NewLine + "-------------------------------------"
-                    + Environment.NewLine + "Date\t\t" + "Turbidity Reading"
-                    + Environment.NewLine + dateTimeStamp + "\t\t" + turbidNum;
+                    + Environment.NewLine + "Date\t\t\t" + "Turbidity Reading"
+                    + Environment.NewLine;
                     //Write to file
                     using (StreamWriter file = new StreamWriter(path))
                     {
@@ -390,9 +389,9 @@ namespace Turbidity
             {
                 // The using statement automatically flushes AND CLOSES the stream and calls 
                 // IDisposable.Dispose on the stream object.
-                using (StreamWriter file = new StreamWriter(year + path, true))
+                using (StreamWriter file = new StreamWriter(path, true))
                 {
-                    file.WriteLine(dateTimeStamp + path + Environment.NewLine);
+                    file.WriteLine(dateTimeStamp + "\t" + turbidNum + Environment.NewLine);
                 }
             }
             catch (Exception ex)
