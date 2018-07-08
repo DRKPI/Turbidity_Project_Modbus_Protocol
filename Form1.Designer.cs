@@ -230,9 +230,11 @@
             // richTextBoxAboutInfo
             // 
             this.richTextBoxAboutInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.richTextBoxAboutInfo.Location = new System.Drawing.Point(19, 23);
+            this.richTextBoxAboutInfo.Cursor = System.Windows.Forms.Cursors.Default;
+            this.richTextBoxAboutInfo.ForeColor = System.Drawing.Color.White;
+            this.richTextBoxAboutInfo.Location = new System.Drawing.Point(25, 25);
             this.richTextBoxAboutInfo.Name = "richTextBoxAboutInfo";
-            this.richTextBoxAboutInfo.Size = new System.Drawing.Size(374, 337);
+            this.richTextBoxAboutInfo.Size = new System.Drawing.Size(368, 328);
             this.richTextBoxAboutInfo.TabIndex = 0;
             this.richTextBoxAboutInfo.Text = "This is a test of words in here!";
             // 
@@ -248,7 +250,9 @@
             this.Controls.Add(this.btnRequestMsg);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
+            this.MaximizeBox = false;
             this.Name = "Form1";
+            this.ShowIcon = false;
             this.Text = "Turbidity Reading Collector";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.menuTabControl.ResumeLayout(false);

@@ -54,13 +54,13 @@ namespace Turbidity
         /// <param name="e"></param>
         private void Form1_Load(object sender, EventArgs e)
         {
-            this.BackColor = System.Drawing.Color.FromArgb(30, 72, 44);
-            this.editTabPage.BackColor = System.Drawing.Color.FromArgb(30,72, 44);
-            this.btnCancelConfigInput.BackColor = System.Drawing.Color.FromArgb(54, 54, 54);
-            this.btnRequestMsg.BackColor = System.Drawing.Color.FromArgb(54, 54, 54);
-            this.btnSaveConfigInput.BackColor = System.Drawing.Color.FromArgb(54, 54, 54);
-            this.aboutTabPage.BackColor = System.Drawing.Color.FromArgb(54, 54, 54);
-            this.richTextBoxAboutInfo.BackColor = System.Drawing.Color.FromArgb(30, 72, 44);
+            this.BackColor = System.Drawing.Color.FromArgb(0, 132, 61);
+            this.editTabPage.BackColor = System.Drawing.Color.FromArgb(0, 132, 61);
+            this.btnCancelConfigInput.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
+            this.btnRequestMsg.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
+            this.btnSaveConfigInput.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
+            this.aboutTabPage.BackColor = System.Drawing.Color.FromArgb(0, 132, 61);
+            this.richTextBoxAboutInfo.BackColor = System.Drawing.Color.FromArgb(0, 132, 61);
 
 
             //Call Function to build Modbus request message
