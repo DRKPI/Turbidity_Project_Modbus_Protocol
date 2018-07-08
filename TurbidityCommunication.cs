@@ -19,7 +19,7 @@ namespace Turbidity
         public string receiveMsg { get; private set; }
         public string errorMessage { get; private set; }
         public string logError { get; private set; }
-        private string[] configData { get; set; } = new string[3];
+        public string[] configData { get; set; } = new string[3];
         private string testReceiveMsg = "04 03 04 EF 61 3C F7 DB E9";
         public string turbidNum = "";
         public int timeInterval { get; private set; } = 1;
@@ -45,17 +45,27 @@ namespace Turbidity
                 //if could not parse let user know
                 LogError(errorMessage = "Baud Rate has to be a whole number and match the sc200 controllers Baud Rate." + Environment.NewLine);
             }
-            if (!int.TryParse(configData[2], out int interval))
-            {
-                //if could not parse let user know
-                LogError(errorMessage += "Time interval is in minutes and has to be a whole number between 1 and 60." + Environment.NewLine);
-            }
-            timeInterval = interval;
+            //Set timeInterval if serial port is not already open
+            //TODO - getting an exception error here
+            //if (!sp.IsOpen)
+            //{
+                if (!int.TryParse(configData[2], out int interval))
+                {
+                    //if could not parse let user know
+                    LogError(errorMessage += "Time interval is in minutes and has to be a whole number between 1 and 60." + Environment.NewLine);
+                }
+                timeInterval = interval; 
+            //}
             //Open the Serial Port using settings obtained from the config file
             if (!DEBUG)
             {
                 try
                 {
+                    if(sp != null && sp.IsOpen)
+                    {
+                        sp.Close();
+                        sp.Dispose();
+                    }
                     sp = new SerialPort(port, baudRate, Parity.None, 8, StopBits.One);
                     sp.Open();
                 }
@@ -66,6 +76,7 @@ namespace Turbidity
 
                     // close serial port
                     sp.Close();
+                    sp.Dispose();
                 }
             }
         }// end Function OpenSerialPort
@@ -400,6 +411,46 @@ namespace Turbidity
                 LogError(errorMessage += Environment.NewLine + ex.ToString());
             }
         }// end Function WriteTurbidDataToFile
+
+        /// <summary>
+        /// Takes user input from configData and updates config file
+        /// </summary>
+        public void updateConfigFile()
+        {
+            string path = "config.txt";
+            string defaultConfigFile = "Configuration Information"
+                    + Environment.NewLine + "-----------------------------"
+                    + Environment.NewLine + "If the com port is ever changed on the computer then it needs to be updated here (line 13) as well."
+                    + Environment.NewLine + "\tIn order for the program to work the com port listed in this file must match the com port used on computer."
+                    + Environment.NewLine + "\tIf not sure of which com port is being used, look in Device Manager --> Ports"
+                    + Environment.NewLine + "The baud rate here (line 13), and on the Turbidity device (sc200) must match, please check both locations to verify."
+                    + Environment.NewLine + "\tFrom the sc200 controller home screen, choose Network Setup --> Baud Rate"
+                    + Environment.NewLine + "\tFor RS232 connection, 9600 baud rate is best, but it can also go up to 19200 baud rate."
+                    + Environment.NewLine + "The time interval (line 13) is for how often you want to grab a turbidity reading from your device."
+                    + Environment.NewLine + "\tThis can be anytime from 1 min up to 60 min."
+                    + Environment.NewLine
+                    + Environment.NewLine + "Important Notes - There cannot be an empty/blank line at the end of file. The program will not read in data correctly."
+                    + Environment.NewLine + "\tPlease make sure no extra lines and/or spaces are after the \"Time Interval\""
+                    + Environment.NewLine
+                    + Environment.NewLine + "*********CONFIGURATION INFORMATION*********"
+                    + Environment.NewLine + "COM PORT\tBAUD RATE\tTIME INTERVAL"
+                    + Environment.NewLine + configData[0] + "\t\t" + configData[1] + "\t\t" + configData[2];// configData[0] is port, configData[1] is baud rate, and configData[2] is time interval
+            //Would like to only write out only the last line of this file. Suggestions I've seen online all talk about reading in each line and queueing them up. Seems to be as much time and 
+            // memory as just rewriting the file, so I chose to just rewrite the file
+            try
+            {
+                //Write to file
+                using (StreamWriter file = new StreamWriter(path))
+                {
+                    file.Write(defaultConfigFile);
+                }
+            }
+            catch (Exception ex)
+            {
+                //Log any error message
+                LogError(errorMessage = ex.Message.ToString());
+            }
+        }// end Function updateConfigFile
 
         /// <summary>
         /// Log error message out to file

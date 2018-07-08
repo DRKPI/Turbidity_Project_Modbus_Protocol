@@ -9,12 +9,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 
 namespace Turbidity
 {
     public partial class Form1 : Form
     {
         TurbidityCommunication turbidity = new TurbidityCommunication();
+        bool changesMade = false;
 
         public Form1()
         {
@@ -33,7 +35,6 @@ namespace Turbidity
 
             //Disable timer
             timer1.Enabled = false;
-            timer1.Interval = turbidity.timeInterval * 60000;//Timer is in milliseconds so need to convert minutes from timeInterval to milliseconds
 
             //Call startProcess function
             StartProcess();
@@ -53,6 +54,15 @@ namespace Turbidity
         /// <param name="e"></param>
         private void Form1_Load(object sender, EventArgs e)
         {
+            this.BackColor = System.Drawing.Color.FromArgb(30, 72, 44);
+            this.editTabPage.BackColor = System.Drawing.Color.FromArgb(30,72, 44);
+            this.btnCancelConfigInput.BackColor = System.Drawing.Color.FromArgb(54, 54, 54);
+            this.btnRequestMsg.BackColor = System.Drawing.Color.FromArgb(54, 54, 54);
+            this.btnSaveConfigInput.BackColor = System.Drawing.Color.FromArgb(54, 54, 54);
+            this.aboutTabPage.BackColor = System.Drawing.Color.FromArgb(54, 54, 54);
+            this.richTextBoxAboutInfo.BackColor = System.Drawing.Color.FromArgb(30, 72, 44);
+
+
             //Call Function to build Modbus request message
             turbidity.BuildMessage();
 
@@ -64,6 +74,7 @@ namespace Turbidity
                 MessageBox.Show("Serial Port could not be opended." + Environment.NewLine +
                     "Verify the config file is written in the correct format." + Environment.NewLine +
                     " See log file for details. ", "Error Message", MessageBoxButtons.OK);
+                //TODO - recover gracefully from errors
                 //this.Close();
             }
         }// end Function Form1_Load
@@ -77,7 +88,7 @@ namespace Turbidity
         private void timer1_Tick(object sender, EventArgs e)
         {
             StartProcess();
-        }
+        }// end Function timer1_Tick
        
         /// <summary>
         /// Start the process of gathering Turbidity reading
@@ -113,13 +124,101 @@ namespace Turbidity
             }
             //Print turbidity number to screen
             txtReceivedMsg.Text = turbidity.turbidNum;
-        }
+        }// end Function StartProcess
 
-        private void button2_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Clears fields, may have this do more later
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnCancelConfigInput_Click(object sender, EventArgs e)
         {
+            //Clear text boxes, possibly navigate to "About" page
+            txtBoxComPort.Clear();
+            cmbBoxBaudRate.Text = "";
+            txtBoxTimeInterval.Clear();
+        }// end Function btnCancelConfigInput_Click
 
-        }
-    }
-}
+        /// <summary>
+        /// Save input to config file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnSaveConfigInput_Click(object sender, EventArgs e)
+        {
+            verifyInput();
+            //TODO - when errors, still writes to file. Find way to fix this
+            //TODO - Verify above bug, after additional changes this bug may no loger be there
+            turbidity.updateConfigFile();
+            if (!String.IsNullOrEmpty(turbidity.errorMessage))
+            {
+                MessageBox.Show("Error updating config file settings."
+                    + Environment.NewLine + "See log file for details.", "Error Message", MessageBoxButtons.OK);
+            }
+            //reset timer1 to new input if it has changed
+            if (turbidity.timeInterval != int.Parse(turbidity.configData[2]))
+            {
+                timer1.Interval = int.Parse(turbidity.configData[2]) * 60000;
+            }
+            //call OpenSerialPort if COM port or Baud Rate are changed
+            if (changesMade)
+            {
+                turbidity.OpenSerialPort();
+                changesMade = false;
+            }
+        }// end Function btnSaveConfigInput_Click
 
-//TODO - add edit options to form (include com port, baud rate, sync time (1min - 60min))
+        /// <summary>
+        /// Verifies validity of user input so it will work with program
+        /// </summary>
+        private void verifyInput()
+        {
+            bool correctBaudRate = Regex.IsMatch(cmbBoxBaudRate.Text, "[ ^ 0-9]");
+            bool correctTimeInterval = Regex.IsMatch(txtBoxTimeInterval.Text, "[ ^ 0-9]");
+            bool correctComPort = Regex.IsMatch(txtBoxComPort.Text, "(COM[0-9]|com[0-9])");
+
+            //Verify com port input matches correct com port form (ie. COM1)
+            if (correctComPort)
+            {
+                txtBoxComPort.CharacterCasing = CharacterCasing.Upper;
+                turbidity.configData[0] = txtBoxComPort.Text;
+                changesMade = true;
+            }
+            else if (string.IsNullOrWhiteSpace(txtBoxComPort.Text))
+            {
+                //Intentionally left blank, if text box is empty don't do anything
+            }
+            else
+            {
+                MessageBox.Show("Input must be in format of \"COM1\"");
+                txtBoxComPort.Clear();
+            }
+
+            //Verify  baud rate input is a number, prompt to use the dropdown list
+            if (correctBaudRate)
+            {
+                turbidity.configData[1] = cmbBoxBaudRate.Text;
+                changesMade = true;
+            }
+            else if (string.IsNullOrWhiteSpace(cmbBoxBaudRate.Text))
+            {
+                //Intentionally left blank, if text box is empty don't do anything
+            }
+
+            //Verify timeInterval input is a number and time is in minutes
+            if (correctTimeInterval)
+            {
+                turbidity.configData[2] = txtBoxTimeInterval.Text;
+            }
+            else if (string.IsNullOrWhiteSpace(txtBoxTimeInterval.Text))
+            {
+                //Intentionally left blank, if text box is empty don't do anything
+            }
+            else
+            {
+                MessageBox.Show("Input must be a whole number written in minutes (ie. 1hr = 60)");
+                txtBoxTimeInterval.Clear();//TODO - why does this not clear if wrong input is put in timeInterval?
+            }
+        }// end function verifyInput
+    }// end class Form1
+}// end namespace Turbidity
