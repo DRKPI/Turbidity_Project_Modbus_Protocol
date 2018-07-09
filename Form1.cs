@@ -152,6 +152,7 @@ namespace Turbidity
         {
             //Disable Clear button
             btnCancelConfigInput.Enabled = false;
+            btnSaveConfigInput.Enabled = false;
             verifyInput();
             //TODO - when errors, still writes to file. Find way to fix this
             //TODO - Verify above bug, after additional changes this bug may no loger be there
@@ -161,17 +162,26 @@ namespace Turbidity
                 MessageBox.Show("Error updating config file settings."
                     + Environment.NewLine + "See log file for details.", "Error Message", MessageBoxButtons.OK);
             }
-            //reset timer1 to new input if it has changed
-            if (turbidity.timeInterval != int.Parse(turbidity.configData[2]))
+            if (turbidity.timeInterval != int.Parse(turbidity.configData[2]) || changesMade)
             {
-                timer1.Interval = int.Parse(turbidity.configData[2]) * 60000;
+                //reset timer1 to new input if it has changed
+                if (turbidity.timeInterval != int.Parse(turbidity.configData[2]))
+                {
+                    timer1.Interval = int.Parse(turbidity.configData[2]) * 60000;
+                }
+                //call OpenSerialPort if COM port or Baud Rate are changed
+                if (changesMade)
+                {
+                    turbidity.OpenSerialPort();
+                    changesMade = false;
+                }
+                //Give feedback to user that settings are saved
+                MessageBox.Show("Settings have been updated in \"config.txt\"", "Save Successful"); 
             }
-            //call OpenSerialPort if COM port or Baud Rate are changed
-            if (changesMade)
-            {
-                turbidity.OpenSerialPort();
-                changesMade = false;
-            }
+            //Clear fields after everything is saved
+            txtBoxComPort.Clear();
+            cmbBoxBaudRate.Text = "";
+            txtBoxTimeInterval.Clear();
             //Enable Clear button
             btnCancelConfigInput.Enabled = true;
         }// end Function btnSaveConfigInput_Click
@@ -181,8 +191,8 @@ namespace Turbidity
         /// </summary>
         private void verifyInput()
         {
-            bool correctBaudRate = Regex.IsMatch(cmbBoxBaudRate.Text, "[ ^ 0-9]");
-            bool correctTimeInterval = Regex.IsMatch(txtBoxTimeInterval.Text, "[ ^ 0-9]");
+            bool correctBaudRate = Regex.IsMatch(cmbBoxBaudRate.Text, "[ ^ 0-9]");//TODO - possibly get rid of 
+            bool correctTimeInterval = Regex.IsMatch(txtBoxTimeInterval.Text, "^[0-9]+$");
             bool correctComPort = Regex.IsMatch(txtBoxComPort.Text, "(COM[0-9]|com[0-9])");
 
             //Verify com port input matches correct com port form (ie. COM1)

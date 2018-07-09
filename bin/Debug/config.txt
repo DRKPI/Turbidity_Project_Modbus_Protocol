@@ -14,4 +14,4 @@ Important Notes - There cannot be an empty/blank line at the end of file. The pr
 
 *********CONFIGURATION INFORMATION*********
 COM PORT	BAUD RATE	TIME INTERVAL
-COM1		19200		5
+COM2		9600		3w3w3

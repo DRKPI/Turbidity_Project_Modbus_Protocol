@@ -47,15 +47,15 @@ namespace Turbidity
             }
             //Set timeInterval if serial port is not already open
             //TODO - getting an exception error here
-            //if (!sp.IsOpen)
-            //{
+            if (sp == null)
+            {
                 if (!int.TryParse(configData[2], out int interval))
                 {
                     //if could not parse let user know
                     LogError(errorMessage += "Time interval is in minutes and has to be a whole number between 1 and 60." + Environment.NewLine);
                 }
                 timeInterval = interval; 
-            //}
+            }
             //Open the Serial Port using settings obtained from the config file
             if (!DEBUG)
             {

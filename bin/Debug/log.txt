@@ -34,3 +34,13 @@ System.InvalidOperationException: The port is closed.
    at Turbidity.TurbidityCommunication.ReadFromSP() in C:\Users\d_nko\documents\visual studio 2017\Projects\Turbidity_Project_Modbus_Protocol\Turbidity_Project_Modbus_Protocol\TurubidityCommunication.cs:line 272
 
 
+7/9/2018 3:39:21 PM
+Time interval is in minutes and has to be a whole number between 1 and 60.
+
+
+
+7/9/2018 3:51:38 PM
+Time interval is in minutes and has to be a whole number between 1 and 60.
+
+
+
