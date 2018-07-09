@@ -54,6 +54,7 @@ namespace Turbidity
         /// <param name="e"></param>
         private void Form1_Load(object sender, EventArgs e)
         {
+            //Set GUI custom color scheme
             this.BackColor = System.Drawing.Color.FromArgb(0, 132, 61);
             this.editTabPage.BackColor = System.Drawing.Color.FromArgb(0, 132, 61);
             this.btnCancelConfigInput.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
@@ -61,7 +62,6 @@ namespace Turbidity
             this.btnSaveConfigInput.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
             this.aboutTabPage.BackColor = System.Drawing.Color.FromArgb(0, 132, 61);
             this.richTextBoxAboutInfo.BackColor = System.Drawing.Color.FromArgb(0, 132, 61);
-
 
             //Call Function to build Modbus request message
             turbidity.BuildMessage();
@@ -133,10 +133,14 @@ namespace Turbidity
         /// <param name="e"></param>
         private void btnCancelConfigInput_Click(object sender, EventArgs e)
         {
+            //Disable save button while clearing
+            btnSaveConfigInput.Enabled = false;
             //Clear text boxes, possibly navigate to "About" page
             txtBoxComPort.Clear();
             cmbBoxBaudRate.Text = "";
             txtBoxTimeInterval.Clear();
+            //Enable save button
+            btnSaveConfigInput.Enabled = true;
         }// end Function btnCancelConfigInput_Click
 
         /// <summary>
@@ -146,6 +150,8 @@ namespace Turbidity
         /// <param name="e"></param>
         private void btnSaveConfigInput_Click(object sender, EventArgs e)
         {
+            //Disable Clear button
+            btnCancelConfigInput.Enabled = false;
             verifyInput();
             //TODO - when errors, still writes to file. Find way to fix this
             //TODO - Verify above bug, after additional changes this bug may no loger be there
@@ -166,6 +172,8 @@ namespace Turbidity
                 turbidity.OpenSerialPort();
                 changesMade = false;
             }
+            //Enable Clear button
+            btnCancelConfigInput.Enabled = true;
         }// end Function btnSaveConfigInput_Click
 
         /// <summary>
