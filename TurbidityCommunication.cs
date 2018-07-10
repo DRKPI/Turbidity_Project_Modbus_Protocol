@@ -420,17 +420,17 @@ namespace Turbidity
             string path = "config.txt";
             string defaultConfigFile = "Configuration Information"
                     + Environment.NewLine + "-----------------------------"
-                    + Environment.NewLine + "If the com port is ever changed on the computer then it needs to be updated here (line 13) as well."
+                    + Environment.NewLine + "If the com port is ever changed on the computer then it needs to be updated here (line 17) as well."
                     + Environment.NewLine + "\tIn order for the program to work the com port listed in this file must match the com port used on computer."
                     + Environment.NewLine + "\tIf not sure of which com port is being used, look in Device Manager --> Ports"
-                    + Environment.NewLine + "The baud rate here (line 13), and on the Turbidity device (sc200) must match, please check both locations to verify."
+                    + Environment.NewLine + "The baud rate here (line 17), and on the Turbidity device (sc200) must match, please check both locations to verify."
                     + Environment.NewLine + "\tFrom the sc200 controller home screen, choose Network Setup --> Baud Rate"
                     + Environment.NewLine + "\tFor RS232 connection, 9600 baud rate is best, but it can also go up to 19200 baud rate."
-                    + Environment.NewLine + "The time interval (line 13) is for how often you want to grab a turbidity reading from your device."
+                    + Environment.NewLine + "The time interval (line 17) is for how often you want to grab a turbidity reading from your device."
                     + Environment.NewLine + "\tThis can be anytime from 1 min up to 60 min."
                     + Environment.NewLine
                     + Environment.NewLine + "Important Notes - There cannot be an empty/blank line at the end of file. The program will not read in data correctly."
-                    + Environment.NewLine + "\tPlease make sure no extra lines and/or spaces are after the \"Time Interval\""
+                    + Environment.NewLine + "\tPlease make sure no extra lines and/or spaces are after the time in minutes"
                     + Environment.NewLine
                     + Environment.NewLine + "*********CONFIGURATION INFORMATION*********"
                     + Environment.NewLine + "COM PORT\tBAUD RATE\tTIME INTERVAL"
