@@ -35,6 +35,7 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.menuTabControl = new System.Windows.Forms.TabControl();
             this.aboutTabPage = new System.Windows.Forms.TabPage();
+            this.richTextBoxAboutInfo = new System.Windows.Forms.RichTextBox();
             this.editTabPage = new System.Windows.Forms.TabPage();
             this.cmbBoxBaudRate = new System.Windows.Forms.ComboBox();
             this.txtBoxComPort = new System.Windows.Forms.TextBox();
@@ -44,7 +45,6 @@
             this.txtBoxTimeInterval = new System.Windows.Forms.TextBox();
             this.btnSaveConfigInput = new System.Windows.Forms.Button();
             this.btnCancelConfigInput = new System.Windows.Forms.Button();
-            this.richTextBoxAboutInfo = new System.Windows.Forms.RichTextBox();
             this.menuTabControl.SuspendLayout();
             this.aboutTabPage.SuspendLayout();
             this.editTabPage.SuspendLayout();
@@ -115,6 +115,18 @@
             this.aboutTabPage.TabIndex = 0;
             this.aboutTabPage.Text = "About";
             this.aboutTabPage.UseVisualStyleBackColor = true;
+            // 
+            // richTextBoxAboutInfo
+            // 
+            this.richTextBoxAboutInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richTextBoxAboutInfo.Cursor = System.Windows.Forms.Cursors.Default;
+            this.richTextBoxAboutInfo.ForeColor = System.Drawing.Color.White;
+            this.richTextBoxAboutInfo.Location = new System.Drawing.Point(25, 25);
+            this.richTextBoxAboutInfo.Name = "richTextBoxAboutInfo";
+            this.richTextBoxAboutInfo.ReadOnly = true;
+            this.richTextBoxAboutInfo.Size = new System.Drawing.Size(368, 328);
+            this.richTextBoxAboutInfo.TabIndex = 0;
+            this.richTextBoxAboutInfo.Text = "This is a test of words in here!";
             // 
             // editTabPage
             // 
@@ -226,17 +238,6 @@
             this.btnCancelConfigInput.Text = "CLEAR";
             this.btnCancelConfigInput.UseVisualStyleBackColor = false;
             this.btnCancelConfigInput.Click += new System.EventHandler(this.btnCancelConfigInput_Click);
-            // 
-            // richTextBoxAboutInfo
-            // 
-            this.richTextBoxAboutInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.richTextBoxAboutInfo.Cursor = System.Windows.Forms.Cursors.Default;
-            this.richTextBoxAboutInfo.ForeColor = System.Drawing.Color.White;
-            this.richTextBoxAboutInfo.Location = new System.Drawing.Point(25, 25);
-            this.richTextBoxAboutInfo.Name = "richTextBoxAboutInfo";
-            this.richTextBoxAboutInfo.Size = new System.Drawing.Size(368, 328);
-            this.richTextBoxAboutInfo.TabIndex = 0;
-            this.richTextBoxAboutInfo.Text = "This is a test of words in here!";
             // 
             // Form1
             // 

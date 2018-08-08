@@ -17,6 +17,7 @@ namespace Turbidity
     {
         TurbidityCommunication turbidity = new TurbidityCommunication();
         bool changesMade = false;
+        bool okSave = false;
         int checkInterval = 0;
 
         public Form1()
@@ -31,19 +32,26 @@ namespace Turbidity
         /// <param name="e"></param>
         private void btnRequestMsg_Click(object sender, EventArgs e)
         {
-            //Disable request button
+            //Disable items
             btnRequestMsg.Enabled = false;
-
-            //Disable timer
             timer1.Enabled = false;
+
+            try
+            {
+                //Set timer interval
+                timer1.Interval = int.Parse(turbidity.configData[2]) * 60000;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
 
             //Call startProcess function
             StartProcess();
 
-            //Enable timer
+            //Enable items
             timer1.Enabled = true;
-
-            //Enable request button
             btnRequestMsg.Enabled = true;
         }// end Function btnRequestMsg_Click
 
@@ -67,7 +75,7 @@ namespace Turbidity
             //Call Function to build Modbus request message
             turbidity.BuildMessage();
 
-            // Open a serial port and handle any error
+            // Open a serial port / display error
             turbidity.OpenSerialPort();
             //Error message
             if (!String.IsNullOrEmpty(turbidity.errorMessage))
@@ -75,7 +83,6 @@ namespace Turbidity
                 MessageBox.Show("Serial Port could not be opended." + Environment.NewLine +
                     "Verify the config file is written in the correct format." + Environment.NewLine +
                     " See log file for details. ", "Error Message", MessageBoxButtons.OK);
-                //TODO - recover gracefully from errors
                 this.Close();
             }
         }// end Function Form1_Load
@@ -117,6 +124,8 @@ namespace Turbidity
                     + Environment.NewLine + "See log file for details.", "Error Message", MessageBoxButtons.OK);
             }
             //Write converted Turbidity number out to file
+
+
             turbidity.WriteTurbidDataToFile();
             if (!String.IsNullOrEmpty(turbidity.errorMessage))
             {
@@ -155,7 +164,6 @@ namespace Turbidity
             btnCancelConfigInput.Enabled = false;
             btnSaveConfigInput.Enabled = false;
             verifyInput();
-            turbidity.updateConfigFile();
             if (!String.IsNullOrEmpty(turbidity.errorMessage))
             {
                 MessageBox.Show("Error updating config file settings."
@@ -164,19 +172,39 @@ namespace Turbidity
             //Give user feedback that save happened
             if (turbidity.timeInterval != checkInterval || changesMade)
             {
-                //reset timer1 to new input if it has changed
-                if (turbidity.timeInterval != int.Parse(turbidity.configData[2]))
+                if (okSave)
                 {
-                    timer1.Interval = int.Parse(turbidity.configData[2]) * 60000;
+                    //Write new settings out to config file
+                    turbidity.updateConfigFile();
+
+                    //Give feedback to user that settings are saved
+                    MessageBox.Show("Settings have been updated in \"config.txt\"", "Save Successful", MessageBoxButtons.OK);
+                    okSave = false;
+
+                    //reset timer1 to new input if it has changed
+                    if (turbidity.timeInterval != int.Parse(turbidity.configData[2]))
+                    {
+                        try
+                        {
+                            //TODO: Need to reset timer if changed
+                            timer1.Enabled = false;
+                            timer1.Interval = int.Parse(turbidity.configData[2]) * 60000;
+                            timer1.Enabled = true;
+                        }
+                        catch (Exception)
+                        {
+
+                            throw;
+                        }
+                    }
                 }
+
                 //call OpenSerialPort if COM port or Baud Rate are changed
                 if (changesMade)
                 {
                     turbidity.OpenSerialPort();
                     changesMade = false;
                 }
-                //Give feedback to user that settings are saved
-                MessageBox.Show("Settings have been updated in \"config.txt\"", "Save Successful", MessageBoxButtons.OK); 
             }
             //Clear fields after everything is saved
             txtBoxComPort.Clear();
@@ -201,6 +229,7 @@ namespace Turbidity
                 txtBoxComPort.CharacterCasing = CharacterCasing.Upper;
                 turbidity.configData[0] = txtBoxComPort.Text;
                 changesMade = true;
+                okSave = true;
             }
             else if (string.IsNullOrWhiteSpace(txtBoxComPort.Text))
             {
@@ -212,21 +241,32 @@ namespace Turbidity
                 txtBoxComPort.Clear();
             }
 
-            //Verify  baud rate input is a number, prompt to use the dropdown list
+            //Make Baud Rate be a drop down menu
             if (!string.IsNullOrWhiteSpace(cmbBoxBaudRate.Text))
             {
                 turbidity.configData[1] = cmbBoxBaudRate.Text;
                 changesMade = true;
+                okSave = true;
             }
 
-            //Verify timeInterval input is a number and time is in minutes
+            //Verify timeInterval input is a number is not 0 and time is in minutes
             if (correctTimeInterval)
             {
-                turbidity.configData[2] = txtBoxTimeInterval.Text;
-                if (int.TryParse(turbidity.configData[2], out int interval))
+                if (txtBoxTimeInterval.Text != "0")
                 {
-                    checkInterval = interval;
+                    turbidity.configData[2] = txtBoxTimeInterval.Text;
+                    if (int.TryParse(turbidity.configData[2], out int interval))
+                    {
+                        checkInterval = interval;
+                        okSave = true;
+                    }
                 }
+                else
+                {
+                    MessageBox.Show("Cannot be \"0\" \nInput must be a whole number written in minutes (ie. 1hr = 60)");
+                    txtBoxTimeInterval.Clear();
+                }
+                
             }
             else if (string.IsNullOrWhiteSpace(txtBoxTimeInterval.Text))
             {

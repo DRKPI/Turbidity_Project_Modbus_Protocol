@@ -11,7 +11,7 @@ namespace Turbidity
 {
     class TurbidityCommunication
     {
-        const bool DEBUG = true;
+        const bool DEBUG = false;
         private static SerialPort sp = null;
         public byte[] buffRec { get; private set; }
         public byte[] message { get; private set; } = new byte[8];
@@ -40,43 +40,68 @@ namespace Turbidity
             ReadFromConfigFile();
             //Put data from configData into variables
             string port = configData[0];
-            if (!int.TryParse(configData[1], out int baudRate))
+            int baudRate;
+            try
             {
-                //if could not parse let user know
-                LogError(errorMessage = "Baud Rate has to be a whole number and match the sc200 controllers Baud Rate." + Environment.NewLine);
+                if (!int.TryParse(configData[1], out baudRate))
+                {
+                    //if could not parse let user know
+                    LogError(errorMessage = "Baud Rate has to be a whole number and match the sc200 controllers Baud Rate." + Environment.NewLine);
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
             }
             //Set timeInterval if serial port is not already open
             //TODO - getting an exception error here
             if (sp == null)
             {
-                if (!int.TryParse(configData[2], out int interval))
+                int interval;
+                try
                 {
-                    //if could not parse let user know
-                    LogError(errorMessage += "Time interval is in minutes and has to be a whole number between 1 and 60." + Environment.NewLine);
+                    if (!int.TryParse(configData[2], out interval))
+                    {
+                        //if could not parse let user know
+                        LogError(errorMessage += "Time interval is in minutes and has to be a whole number between 1 and 60." + Environment.NewLine);
+                    }
                 }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+                //TODO: possibly need to check that value is not 0 here
                 timeInterval = interval; 
             }
             //Open the Serial Port using settings obtained from the config file
             if (!DEBUG)
             {
-                try
+                int attempt = 1;
+                while (attempt < 4)
                 {
-                    if(sp != null && sp.IsOpen)
+                    try
                     {
+                        if (sp != null && sp.IsOpen)
+                        {
+                            sp.Close();
+                            sp.Dispose();
+                        }
+                        sp = new SerialPort(port, baudRate, Parity.None, 8, StopBits.One);
+                        sp.Open();
+                        return;
+                    }
+                    catch (Exception ex)
+                    {
+                        //Send error messgage to the form load method in FormMain.cs
+                        LogError(errorMessage += ex.Message.ToString());
+                        Thread.Sleep(TimeSpan.FromSeconds(.5));
+                        attempt++;
+                        // close serial port
                         sp.Close();
                         sp.Dispose();
-                    }
-                    sp = new SerialPort(port, baudRate, Parity.None, 8, StopBits.One);
-                    sp.Open();
-                }
-                catch (Exception ex)
-                {
-                    //Send error messgage to the form load method in FormMain.cs
-                    LogError(errorMessage += ex.Message.ToString());
-
-                    // close serial port
-                    sp.Close();
-                    sp.Dispose();
+                    } 
                 }
             }
         }// end Function OpenSerialPort
@@ -171,7 +196,8 @@ namespace Turbidity
         /// </summary>
         /// <param name="data">byte[]</param>
         /// <returns>checkSum byte[] to add to modbus package</returns>
-        /// This checksum algorithm was taken from an online tutorial
+        /// This checksum algorithm was taken from an online tutorial (https://stackoverflow.com/questions/51286751/c-sharp-generating-a-crc8-byte-method-with-a-byte-array-input)
+        /// The code has been altered to work with my program
         private static byte[] CRC16(byte[] data)
         {
             byte[] checkSum = new byte[2];
@@ -214,16 +240,14 @@ namespace Turbidity
                 ushort startAddress = 0000;// Starting Address - register 40001 holds the turbidity reading as a float
                 ushort numberOfRegisters = 0002;// Quantity of Registers to read - only need reg 40001
 
-
                 // Build Message(FC03)
-
                 message[0] = slaveID;// Slave ID
                 message[1] = functionCode;// Function
                 message[2] = (byte)(startAddress >> 8);// Starting Address High
                 message[3] = (byte)startAddress;// Starting Address Low
                 message[4] = (byte)(numberOfRegisters >> 8);// quantity of Registers High
                 message[5] = (byte)numberOfRegisters;// quantity of Registers Low
-                                                     //add checkSum to byte[]
+                //add checkSum to byte[]
                 byte[] checkSum = CRC16(message);
                 message[6] = checkSum[0];// error check Low
                 message[7] = checkSum[1];// error check High 
@@ -236,34 +260,24 @@ namespace Turbidity
         /// <param name="frame"></param>
         public void WriteToSP(byte[] frame)
         {
-            int count = 0;
-            int attempts = 0;
             errorMessage = String.Empty;
 
             if (!DEBUG)
             {
-                while (count < 4 && attempts < 1)
+                try
                 {
-                    try
-                    {
-                        sp.Write(frame, 0, frame.Length);// send frame
-                    }
-                    catch (Exception ex)
-                    {
-                        //Send error messgage to the form load method in FormMain.cs
-                        LogError(errorMessage = ex.ToString());
+                    sp.Write(frame, 0, frame.Length);// send frame
+                }
+                catch (Exception ex)
+                {
+                    //Send error messgage to the form load method in FormMain.cs
+                    LogError(errorMessage = ex.ToString());
 
-                        Thread.Sleep(TimeSpan.FromSeconds(.5));
-
-                        //close serial port, after 4 attempts to connect
-                        count++;
-                        if (count == 4)
-                        {
-                            sp.Close();
-                            //TODO - write out message that sending message to sensor failed, secondaryErrorMsg is good name
-                        }
+                    if (sp.IsOpen)
+                    {
+                        sp.Close();
+                        //TODO - write out message that sending message to sensor failed, secondaryErrorMsg is good name
                     }
-                    attempts++;
                 }
             }
         }// end Function WriteToSP
@@ -351,11 +365,19 @@ namespace Turbidity
 
             //Convert data to a float
             string reorderdHex = string.Concat(tempData2);// put hex values back into a string
-            uint num = uint.Parse(reorderdHex, System.Globalization.NumberStyles.AllowHexSpecifier);
-
-            byte[] floatVals = BitConverter.GetBytes(num);
-            float f = BitConverter.ToSingle(floatVals, 0);
-            turbidNum = f.ToString("N4");//Convert float value to string and rounded to 4 decimal places
+            try
+            {
+                uint num = uint.Parse(reorderdHex, System.Globalization.NumberStyles.AllowHexSpecifier);
+                byte[] floatVals = BitConverter.GetBytes(num);
+                float f = BitConverter.ToSingle(floatVals, 0);
+                turbidNum = f.ToString("N4");//Convert float value to string and rounded to 4 decimal places
+            }
+            catch (Exception)
+            {
+                //TODO log any errors
+                //throw;
+            }
+            
         }// end Function ConvertDataToFloat
 
         /// <summary>
@@ -483,3 +505,17 @@ namespace Turbidity
         }// end Function LogError
     }// end Class
 }// end Namespace
+
+
+//// string message = "Could not opend a serial port";
+//string caption = "No Serial Port";
+//System.Windows.Forms.MessageBoxButtons buttons = System.Windows.Forms.MessageBoxButtons.YesNo;
+//System.Windows.Forms.DialogResult result;
+//// Displays the MessageBox.  		
+//result = System.Windows.Forms.MessageBox.Show(message, caption, buttons, System.Windows.Forms.MessageBoxIcon.Question,
+//    System.Windows.Forms.MessageBoxDefaultButton.Button1, System.Windows.Forms.MessageBoxOptions.RightAlign);
+//                            if(result == System.Windows.Forms.DialogResult.Yes)
+//                            {
+//                                //Closes the parent form
+//                                //Form1.Close();
+//                            }
