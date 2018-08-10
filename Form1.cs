@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO.Ports;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -83,7 +82,7 @@ namespace Turbidity
                 MessageBox.Show("Serial Port could not be opended." + Environment.NewLine +
                     "Verify the config file is written in the correct format." + Environment.NewLine +
                     " See log file for details. ", "Error Message", MessageBoxButtons.OK);
-                this.Close();
+                //this.Close();
             }
         }// end Function Form1_Load
 
@@ -115,6 +114,7 @@ namespace Turbidity
                     + Environment.NewLine + "See log file for details.", "Error Message", MessageBoxButtons.OK);
             }
             Thread.Sleep(TimeSpan.FromSeconds(1));
+            
             //Read message from sc200 controller
             turbidity.ReadFromSP();
             //Error message
@@ -123,15 +123,15 @@ namespace Turbidity
                 MessageBox.Show("Error receiving message from Turbidity meter."
                     + Environment.NewLine + "See log file for details.", "Error Message", MessageBoxButtons.OK);
             }
+            
             //Write converted Turbidity number out to file
-
-
             turbidity.WriteTurbidDataToFile();
             if (!String.IsNullOrEmpty(turbidity.errorMessage))
             {
                 MessageBox.Show("Error writing turbidity number out to file."
                     + Environment.NewLine + "See log file for details.", "Error Message", MessageBoxButtons.OK);
             }
+            
             //Print turbidity number to screen
             txtReceivedMsg.Text = turbidity.turbidNum;
         }// end Function StartProcess
@@ -223,6 +223,7 @@ namespace Turbidity
             bool correctTimeInterval = Regex.IsMatch(txtBoxTimeInterval.Text, "^[0-9]+$");
             bool correctComPort = Regex.IsMatch(txtBoxComPort.Text, "^(COM[0-9]+|com[0-9]+)$");
 
+            //TODO: Make com port a drop down box like baud rate
             //Verify com port input matches correct com port form (ie. COM1)
             if (correctComPort)
             {
@@ -241,7 +242,7 @@ namespace Turbidity
                 txtBoxComPort.Clear();
             }
 
-            //Make Baud Rate be a drop down menu
+            //Check if Baud Rate has been changed, if so grab changes
             if (!string.IsNullOrWhiteSpace(cmbBoxBaudRate.Text))
             {
                 turbidity.configData[1] = cmbBoxBaudRate.Text;
