@@ -57,7 +57,7 @@
             this.btnRequestMsg.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnRequestMsg.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRequestMsg.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnRequestMsg.Location = new System.Drawing.Point(547, 147);
+            this.btnRequestMsg.Location = new System.Drawing.Point(767, 134);
             this.btnRequestMsg.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.btnRequestMsg.Name = "btnRequestMsg";
             this.btnRequestMsg.Size = new System.Drawing.Size(167, 53);
@@ -69,7 +69,7 @@
             // txtReceivedMsg
             // 
             this.txtReceivedMsg.Cursor = System.Windows.Forms.Cursors.No;
-            this.txtReceivedMsg.Location = new System.Drawing.Point(547, 78);
+            this.txtReceivedMsg.Location = new System.Drawing.Point(767, 72);
             this.txtReceivedMsg.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.txtReceivedMsg.Name = "txtReceivedMsg";
             this.txtReceivedMsg.ReadOnly = true;
@@ -101,7 +101,7 @@
             this.menuTabControl.Location = new System.Drawing.Point(12, 12);
             this.menuTabControl.Name = "menuTabControl";
             this.menuTabControl.SelectedIndex = 0;
-            this.menuTabControl.Size = new System.Drawing.Size(428, 425);
+            this.menuTabControl.Size = new System.Drawing.Size(721, 425);
             this.menuTabControl.TabIndex = 3;
             // 
             // aboutTabPage
@@ -142,7 +142,7 @@
             this.editTabPage.Location = new System.Drawing.Point(4, 41);
             this.editTabPage.Name = "editTabPage";
             this.editTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.editTabPage.Size = new System.Drawing.Size(420, 380);
+            this.editTabPage.Size = new System.Drawing.Size(713, 380);
             this.editTabPage.TabIndex = 1;
             this.editTabPage.Text = "Edit Settings";
             this.editTabPage.UseVisualStyleBackColor = true;
@@ -159,14 +159,14 @@
             "2400",
             "4800",
             "19200"});
-            this.cmbBoxBaudRate.Location = new System.Drawing.Point(33, 158);
+            this.cmbBoxBaudRate.Location = new System.Drawing.Point(92, 157);
             this.cmbBoxBaudRate.Name = "cmbBoxBaudRate";
             this.cmbBoxBaudRate.Size = new System.Drawing.Size(100, 37);
             this.cmbBoxBaudRate.TabIndex = 10;
             // 
             // txtBoxComPort
             // 
-            this.txtBoxComPort.Location = new System.Drawing.Point(33, 256);
+            this.txtBoxComPort.Location = new System.Drawing.Point(92, 268);
             this.txtBoxComPort.Name = "txtBoxComPort";
             this.txtBoxComPort.Size = new System.Drawing.Size(100, 35);
             this.txtBoxComPort.TabIndex = 8;
@@ -176,7 +176,7 @@
             this.lblSetBaudRate.AutoSize = true;
             this.lblSetBaudRate.BackColor = System.Drawing.Color.Transparent;
             this.lblSetBaudRate.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.lblSetBaudRate.Location = new System.Drawing.Point(25, 224);
+            this.lblSetBaudRate.Location = new System.Drawing.Point(84, 227);
             this.lblSetBaudRate.Name = "lblSetBaudRate";
             this.lblSetBaudRate.Size = new System.Drawing.Size(161, 29);
             this.lblSetBaudRate.TabIndex = 7;
@@ -187,7 +187,7 @@
             this.lblSetComPort.AutoSize = true;
             this.lblSetComPort.BackColor = System.Drawing.Color.Transparent;
             this.lblSetComPort.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.lblSetComPort.Location = new System.Drawing.Point(25, 125);
+            this.lblSetComPort.Location = new System.Drawing.Point(84, 125);
             this.lblSetComPort.Name = "lblSetComPort";
             this.lblSetComPort.Size = new System.Drawing.Size(167, 29);
             this.lblSetComPort.TabIndex = 5;
@@ -198,7 +198,7 @@
             this.lblSetTimeInterval.AutoSize = true;
             this.lblSetTimeInterval.BackColor = System.Drawing.Color.Transparent;
             this.lblSetTimeInterval.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.lblSetTimeInterval.Location = new System.Drawing.Point(25, 25);
+            this.lblSetTimeInterval.Location = new System.Drawing.Point(84, 25);
             this.lblSetTimeInterval.Name = "lblSetTimeInterval";
             this.lblSetTimeInterval.Size = new System.Drawing.Size(194, 29);
             this.lblSetTimeInterval.TabIndex = 4;
@@ -206,7 +206,7 @@
             // 
             // txtBoxTimeInterval
             // 
-            this.txtBoxTimeInterval.Location = new System.Drawing.Point(33, 60);
+            this.txtBoxTimeInterval.Location = new System.Drawing.Point(92, 57);
             this.txtBoxTimeInterval.Name = "txtBoxTimeInterval";
             this.txtBoxTimeInterval.Size = new System.Drawing.Size(100, 35);
             this.txtBoxTimeInterval.TabIndex = 3;
@@ -217,9 +217,9 @@
             this.btnSaveConfigInput.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnSaveConfigInput.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnSaveConfigInput.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnSaveConfigInput.Location = new System.Drawing.Point(20, 328);
+            this.btnSaveConfigInput.Location = new System.Drawing.Point(30, 328);
             this.btnSaveConfigInput.Name = "btnSaveConfigInput";
-            this.btnSaveConfigInput.Size = new System.Drawing.Size(117, 34);
+            this.btnSaveConfigInput.Size = new System.Drawing.Size(248, 34);
             this.btnSaveConfigInput.TabIndex = 2;
             this.btnSaveConfigInput.Text = "SAVE";
             this.btnSaveConfigInput.UseVisualStyleBackColor = false;
@@ -231,9 +231,9 @@
             this.btnCancelConfigInput.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnCancelConfigInput.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnCancelConfigInput.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnCancelConfigInput.Location = new System.Drawing.Point(179, 328);
+            this.btnCancelConfigInput.Location = new System.Drawing.Point(377, 327);
             this.btnCancelConfigInput.Name = "btnCancelConfigInput";
-            this.btnCancelConfigInput.Size = new System.Drawing.Size(117, 35);
+            this.btnCancelConfigInput.Size = new System.Drawing.Size(248, 35);
             this.btnCancelConfigInput.TabIndex = 1;
             this.btnCancelConfigInput.Text = "CLEAR";
             this.btnCancelConfigInput.UseVisualStyleBackColor = false;
@@ -244,7 +244,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 29F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(770, 468);
+            this.ClientSize = new System.Drawing.Size(1005, 468);
             this.Controls.Add(this.menuTabControl);
             this.Controls.Add(this.lblTurbidReading);
             this.Controls.Add(this.txtReceivedMsg);

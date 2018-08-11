@@ -16,8 +16,9 @@ namespace Turbidity
         public byte[] message { get; private set; } = new byte[8];
         public string sendMsg { get; private set; }
         public string receiveMsg { get; private set; }
-        public string errorMessage { get; private set; } = String.Empty;
-        public string logError { get; private set; }
+        public string errorMessage { get; set; } = String.Empty;
+        public string secondaryErrorMsg { get; private set; } = String.Empty;
+        //public string logError { get; private set; }
         public string[] configData { get; set; } = new string[3];
         private string testReceiveMsg = "04 03 04 EF 61 3C F7 DB E9";
         public string turbidNum = "";
@@ -111,30 +112,30 @@ namespace Turbidity
                     LogError(errorMessage = "Choose a valid Baud Rate from the \"Edit Settings\" page.\n And it must match the sc200 controllers Baud Rate." + Environment.NewLine);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //TODO: log error
-                //throw;
+                errorMessage = String.Empty;
+                LogError(errorMessage = ex.Message.ToString());
             }
             //Set timeInterval if serial port is not already open
             if (sp == null)
             {
-                int interval;
+                //int interval;
                 try
                 {
-                    if (!int.TryParse(configData[2], out interval))
+                    if (!int.TryParse(configData[2], out int interval))
                     {
                         errorMessage = String.Empty;
                         //if could not parse let user know
                         LogError(errorMessage = "Time interval must be a whole number written in minutes (ie. 1hr = 60)" + Environment.NewLine);
                     }
+                    timeInterval = interval;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    //TODO: log error
-                    throw;
+                    errorMessage = String.Empty;
+                    LogError(errorMessage = ex.Message.ToString());
                 }
-                timeInterval = interval; 
             }
             //Open the Serial Port using settings obtained from the config file
             if (!DEBUG)
@@ -275,7 +276,8 @@ namespace Turbidity
                     if (sp.IsOpen)
                     {
                         sp.Close();
-                        //TODO - write out message that sending message to sensor failed, secondaryErrorMsg is good name
+                        //write out message that sending message to sensor failed
+                        secondaryErrorMsg = "Could not send request";
                     }
                 }
             }
@@ -371,11 +373,10 @@ namespace Turbidity
                 float f = BitConverter.ToSingle(floatVals, 0);
                 turbidNum = f.ToString("N4");//Convert float value to string and rounded to 4 decimal places
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //TODO log any errors
                 errorMessage = String.Empty;
-                //throw;
+                LogError(errorMessage = ex.Message.ToString());
             }
         }// end Function ConvertDataToFloat
 
@@ -527,7 +528,7 @@ namespace Turbidity
         /// Log error message out to file
         /// </summary>
         /// <param name="errorMessage"></param>
-        private void LogError(string errorMessage)
+        public void LogError(string errorMessage)
         {
             string dateTimeStamp = DateTime.Now.ToString();
             string path = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "log.txt");
@@ -544,15 +545,12 @@ namespace Turbidity
             }
             catch (Exception ex)
             {
-                //TODO write any errors out to console as they can't be logged
-                logError = String.Empty;
+                secondaryErrorMsg = String.Empty;
                 //The following conditions may cause an exception:
                 //The file exists and is read - only
                 //The disk may be full
-                logError = ex.Message;
+                secondaryErrorMsg = ex.Message;
             }
         }// end Function LogError
     }// end Class
 }// end Namespace
-
-//Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory,

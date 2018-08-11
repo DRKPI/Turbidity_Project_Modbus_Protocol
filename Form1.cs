@@ -40,10 +40,17 @@ namespace Turbidity
                 //Set timer interval
                 timer1.Interval = int.Parse(turbidity.configData[2]) * 60000;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                MessageBox.Show("Time Interval must be a whole number written in minutes (ie. 1hr = 60)");
+                txtBoxTimeInterval.Clear();
+                turbidity.errorMessage = String.Empty;
+                turbidity.LogError(turbidity.errorMessage = Environment.NewLine + ex.ToString());
+                //Error message if could not write error message out to file
+                if (!String.IsNullOrEmpty(turbidity.secondaryErrorMsg))
+                {
+                    MessageBox.Show("Could not write error out to file." + Environment.NewLine + turbidity.secondaryErrorMsg, "Error Message", MessageBoxButtons.OK);
+                }
             }
 
             //Call startProcess function
@@ -84,6 +91,11 @@ namespace Turbidity
                     " See log file for details. ", "Error Message", MessageBoxButtons.OK);
                 //this.Close();
             }
+            //Error message if could not write error message out to file
+            if (!String.IsNullOrEmpty(turbidity.secondaryErrorMsg))
+            {
+                MessageBox.Show("Could not write error out to file." + Environment.NewLine + turbidity.secondaryErrorMsg, "Error Message", MessageBoxButtons.OK);
+            }
         }// end Function Form1_Load
 
         /// <summary>
@@ -113,6 +125,11 @@ namespace Turbidity
                 MessageBox.Show("Error sending message to Turbidity meter."
                     + Environment.NewLine + "See log file for details.", "Error Message", MessageBoxButtons.OK);
             }
+            //Error message if could not write error message out to file
+            if (!String.IsNullOrEmpty(turbidity.secondaryErrorMsg))
+            {
+                MessageBox.Show("Could not write error out to file." + Environment.NewLine + turbidity.secondaryErrorMsg, "Error Message", MessageBoxButtons.OK);
+            }
             Thread.Sleep(TimeSpan.FromSeconds(1));
             
             //Read message from sc200 controller
@@ -123,7 +140,12 @@ namespace Turbidity
                 MessageBox.Show("Error receiving message from Turbidity meter."
                     + Environment.NewLine + "See log file for details.", "Error Message", MessageBoxButtons.OK);
             }
-            
+            //Error message if could not write error message out to file
+            if (!String.IsNullOrEmpty(turbidity.secondaryErrorMsg))
+            {
+                MessageBox.Show("Could not write error out to file." + Environment.NewLine + turbidity.secondaryErrorMsg, "Error Message", MessageBoxButtons.OK);
+            }
+
             //Write converted Turbidity number out to file
             turbidity.WriteTurbidDataToFile();
             if (!String.IsNullOrEmpty(turbidity.errorMessage))
@@ -131,7 +153,12 @@ namespace Turbidity
                 MessageBox.Show("Error writing turbidity number out to file."
                     + Environment.NewLine + "See log file for details.", "Error Message", MessageBoxButtons.OK);
             }
-            
+            //Error message if could not write error message out to file
+            if (!String.IsNullOrEmpty(turbidity.secondaryErrorMsg))
+            {
+                MessageBox.Show("Could not write error out to file." + Environment.NewLine + turbidity.secondaryErrorMsg, "Error Message", MessageBoxButtons.OK);
+            }
+
             //Print turbidity number to screen
             txtReceivedMsg.Text = turbidity.turbidNum;
         }// end Function StartProcess
@@ -169,6 +196,12 @@ namespace Turbidity
                 MessageBox.Show("Error updating config file settings."
                     + Environment.NewLine + "See log file for details.", "Error Message", MessageBoxButtons.OK);
             }
+            //Error message if could not write error message out to file
+            if (!String.IsNullOrEmpty(turbidity.secondaryErrorMsg))
+            {
+                MessageBox.Show("Could not write error out to file." + Environment.NewLine + turbidity.secondaryErrorMsg, "Error Message", MessageBoxButtons.OK);
+            }
+
             //Give user feedback that save happened
             if (turbidity.timeInterval != checkInterval || changesMade)
             {
@@ -178,7 +211,7 @@ namespace Turbidity
                     turbidity.updateConfigFile();
 
                     //Give feedback to user that settings are saved
-                    MessageBox.Show("Settings have been updated in \"config.txt\"", "Save Successful", MessageBoxButtons.OK);
+                    MessageBox.Show("Settings saved correctly", "Save Successful", MessageBoxButtons.OK);
                     okSave = false;
 
                     //reset timer1 to new input if it has changed
@@ -186,15 +219,21 @@ namespace Turbidity
                     {
                         try
                         {
-                            //TODO: Need to reset timer if changed
                             timer1.Enabled = false;
                             timer1.Interval = int.Parse(turbidity.configData[2]) * 60000;
                             timer1.Enabled = true;
                         }
-                        catch (Exception)
+                        catch (Exception ex)
                         {
-
-                            throw;
+                            MessageBox.Show("Time Interval must be a whole number written in minutes (ie. 1hr = 60)");
+                            txtBoxTimeInterval.Clear();
+                            turbidity.errorMessage = String.Empty;
+                            turbidity.LogError(turbidity.errorMessage = Environment.NewLine + ex.ToString());
+                            //Error message if could not write error message out to file
+                            if (!String.IsNullOrEmpty(turbidity.secondaryErrorMsg))
+                            {
+                                MessageBox.Show("Could not write error out to file." + Environment.NewLine + turbidity.secondaryErrorMsg, "Error Message", MessageBoxButtons.OK);
+                            }
                         }
                     }
                 }
@@ -223,7 +262,6 @@ namespace Turbidity
             bool correctTimeInterval = Regex.IsMatch(txtBoxTimeInterval.Text, "^[0-9]+$");
             bool correctComPort = Regex.IsMatch(txtBoxComPort.Text, "^(COM[0-9]+|com[0-9]+)$");
 
-            //TODO: Make com port a drop down box like baud rate
             //Verify com port input matches correct com port form (ie. COM1)
             if (correctComPort)
             {
@@ -264,7 +302,7 @@ namespace Turbidity
                 }
                 else
                 {
-                    MessageBox.Show("Cannot be \"0\" \nInput must be a whole number written in minutes (ie. 1hr = 60)");
+                    MessageBox.Show("Cannot be \"0\" \nTime Interval must be a whole number written in minutes (ie. 1hr = 60)");
                     txtBoxTimeInterval.Clear();
                 }
                 
@@ -275,7 +313,7 @@ namespace Turbidity
             }
             else
             {
-                MessageBox.Show("Input must be a whole number written in minutes (ie. 1hr = 60)");
+                MessageBox.Show("Time Interval must be a whole number written in minutes (ie. 1hr = 60)");
                 txtBoxTimeInterval.Clear();
             }
         }// end function verifyInput
