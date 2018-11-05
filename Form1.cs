@@ -77,6 +77,8 @@ namespace Turbidity
             this.btnSaveConfigInput.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
             this.aboutTabPage.BackColor = System.Drawing.Color.FromArgb(0, 132, 61);
             this.richTextBoxAboutInfo.BackColor = System.Drawing.Color.FromArgb(0, 132, 61);
+            this.logFileLocationTab.BackColor = System.Drawing.Color.FromArgb(0, 132, 61);
+            this.richTextBoxLogFileSettings.BackColor = System.Drawing.Color.FromArgb(0, 132, 61);
 
             //Call Function to build Modbus request message
             turbidity.BuildMessage();
@@ -317,5 +319,29 @@ namespace Turbidity
                 txtBoxTimeInterval.Clear();
             }
         }// end function verifyInput
+
+        private void btnSaveFilePath_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+                DialogResult result = folderBrowserDialog.ShowDialog();
+
+                if (result == DialogResult.OK)
+                {
+                    turbidity.onlineFilePath = folderBrowserDialog.SelectedPath;
+
+                    //TODO: output message that file path change saved correctly
+                    MessageBox.Show("Saved correctly");
+                }
+            }
+            catch (Exception ex)
+            {
+                turbidity.errorMessage = String.Empty;
+                turbidity.LogError(turbidity.errorMessage = Environment.NewLine + ex.ToString());
+            }
+
+            //MessageBox.Show(turbidity.onlineFilePath.ToString());
+        }
     }// end class Form1
 }// end namespace Turbidity

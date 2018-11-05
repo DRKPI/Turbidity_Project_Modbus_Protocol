@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.btnRequestMsg = new System.Windows.Forms.Button();
             this.txtReceivedMsg = new System.Windows.Forms.TextBox();
             this.lblTurbidReading = new System.Windows.Forms.Label();
@@ -45,9 +46,14 @@
             this.txtBoxTimeInterval = new System.Windows.Forms.TextBox();
             this.btnSaveConfigInput = new System.Windows.Forms.Button();
             this.btnCancelConfigInput = new System.Windows.Forms.Button();
+            this.logFileLocationTab = new System.Windows.Forms.TabPage();
+            this.btnSaveFilePath = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.richTextBoxLogFileSettings = new System.Windows.Forms.RichTextBox();
             this.menuTabControl.SuspendLayout();
             this.aboutTabPage.SuspendLayout();
             this.editTabPage.SuspendLayout();
+            this.logFileLocationTab.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnRequestMsg
@@ -57,7 +63,7 @@
             this.btnRequestMsg.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnRequestMsg.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRequestMsg.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnRequestMsg.Location = new System.Drawing.Point(767, 134);
+            this.btnRequestMsg.Location = new System.Drawing.Point(701, 134);
             this.btnRequestMsg.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.btnRequestMsg.Name = "btnRequestMsg";
             this.btnRequestMsg.Size = new System.Drawing.Size(167, 53);
@@ -69,7 +75,7 @@
             // txtReceivedMsg
             // 
             this.txtReceivedMsg.Cursor = System.Windows.Forms.Cursors.No;
-            this.txtReceivedMsg.Location = new System.Drawing.Point(767, 72);
+            this.txtReceivedMsg.Location = new System.Drawing.Point(701, 72);
             this.txtReceivedMsg.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.txtReceivedMsg.Name = "txtReceivedMsg";
             this.txtReceivedMsg.ReadOnly = true;
@@ -81,7 +87,7 @@
             this.lblTurbidReading.AutoSize = true;
             this.lblTurbidReading.BackColor = System.Drawing.Color.Transparent;
             this.lblTurbidReading.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.lblTurbidReading.Location = new System.Drawing.Point(542, 12);
+            this.lblTurbidReading.Location = new System.Drawing.Point(696, 29);
             this.lblTurbidReading.Name = "lblTurbidReading";
             this.lblTurbidReading.Size = new System.Drawing.Size(210, 29);
             this.lblTurbidReading.TabIndex = 2;
@@ -97,11 +103,12 @@
             this.menuTabControl.Appearance = System.Windows.Forms.TabAppearance.Buttons;
             this.menuTabControl.Controls.Add(this.aboutTabPage);
             this.menuTabControl.Controls.Add(this.editTabPage);
+            this.menuTabControl.Controls.Add(this.logFileLocationTab);
             this.menuTabControl.Cursor = System.Windows.Forms.Cursors.Hand;
             this.menuTabControl.Location = new System.Drawing.Point(12, 12);
             this.menuTabControl.Name = "menuTabControl";
             this.menuTabControl.SelectedIndex = 0;
-            this.menuTabControl.Size = new System.Drawing.Size(721, 425);
+            this.menuTabControl.Size = new System.Drawing.Size(642, 423);
             this.menuTabControl.TabIndex = 3;
             // 
             // aboutTabPage
@@ -111,9 +118,9 @@
             this.aboutTabPage.Location = new System.Drawing.Point(4, 41);
             this.aboutTabPage.Name = "aboutTabPage";
             this.aboutTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.aboutTabPage.Size = new System.Drawing.Size(420, 380);
+            this.aboutTabPage.Size = new System.Drawing.Size(634, 378);
             this.aboutTabPage.TabIndex = 0;
-            this.aboutTabPage.Text = "About";
+            this.aboutTabPage.Text = "User Guide";
             this.aboutTabPage.UseVisualStyleBackColor = true;
             // 
             // richTextBoxAboutInfo
@@ -124,9 +131,9 @@
             this.richTextBoxAboutInfo.Location = new System.Drawing.Point(25, 25);
             this.richTextBoxAboutInfo.Name = "richTextBoxAboutInfo";
             this.richTextBoxAboutInfo.ReadOnly = true;
-            this.richTextBoxAboutInfo.Size = new System.Drawing.Size(368, 328);
+            this.richTextBoxAboutInfo.Size = new System.Drawing.Size(606, 328);
             this.richTextBoxAboutInfo.TabIndex = 0;
-            this.richTextBoxAboutInfo.Text = "This is a test of words in here!";
+            this.richTextBoxAboutInfo.Text = resources.GetString("richTextBoxAboutInfo.Text");
             // 
             // editTabPage
             // 
@@ -142,7 +149,7 @@
             this.editTabPage.Location = new System.Drawing.Point(4, 41);
             this.editTabPage.Name = "editTabPage";
             this.editTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.editTabPage.Size = new System.Drawing.Size(713, 380);
+            this.editTabPage.Size = new System.Drawing.Size(634, 378);
             this.editTabPage.TabIndex = 1;
             this.editTabPage.Text = "Edit Settings";
             this.editTabPage.UseVisualStyleBackColor = true;
@@ -231,7 +238,7 @@
             this.btnCancelConfigInput.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnCancelConfigInput.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnCancelConfigInput.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnCancelConfigInput.Location = new System.Drawing.Point(377, 327);
+            this.btnCancelConfigInput.Location = new System.Drawing.Point(343, 328);
             this.btnCancelConfigInput.Name = "btnCancelConfigInput";
             this.btnCancelConfigInput.Size = new System.Drawing.Size(248, 35);
             this.btnCancelConfigInput.TabIndex = 1;
@@ -239,12 +246,59 @@
             this.btnCancelConfigInput.UseVisualStyleBackColor = false;
             this.btnCancelConfigInput.Click += new System.EventHandler(this.btnCancelConfigInput_Click);
             // 
+            // logFileLocationTab
+            // 
+            this.logFileLocationTab.Controls.Add(this.richTextBoxLogFileSettings);
+            this.logFileLocationTab.Controls.Add(this.label1);
+            this.logFileLocationTab.Controls.Add(this.btnSaveFilePath);
+            this.logFileLocationTab.Location = new System.Drawing.Point(4, 41);
+            this.logFileLocationTab.Name = "logFileLocationTab";
+            this.logFileLocationTab.Size = new System.Drawing.Size(634, 378);
+            this.logFileLocationTab.TabIndex = 2;
+            this.logFileLocationTab.Text = "Log File Settings";
+            this.logFileLocationTab.UseVisualStyleBackColor = true;
+            // 
+            // btnSaveFilePath
+            // 
+            this.btnSaveFilePath.BackColor = System.Drawing.Color.Black;
+            this.btnSaveFilePath.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSaveFilePath.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.btnSaveFilePath.Location = new System.Drawing.Point(329, 291);
+            this.btnSaveFilePath.Name = "btnSaveFilePath";
+            this.btnSaveFilePath.Size = new System.Drawing.Size(220, 73);
+            this.btnSaveFilePath.TabIndex = 0;
+            this.btnSaveFilePath.Text = "Change Log File Path";
+            this.btnSaveFilePath.UseVisualStyleBackColor = false;
+            this.btnSaveFilePath.Click += new System.EventHandler(this.btnSaveFilePath_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(172, 300);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(79, 29);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "label1";
+            // 
+            // richTextBoxLogFileSettings
+            // 
+            this.richTextBoxLogFileSettings.BackColor = System.Drawing.SystemColors.Control;
+            this.richTextBoxLogFileSettings.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richTextBoxLogFileSettings.Cursor = System.Windows.Forms.Cursors.Default;
+            this.richTextBoxLogFileSettings.ForeColor = System.Drawing.Color.White;
+            this.richTextBoxLogFileSettings.Location = new System.Drawing.Point(36, 50);
+            this.richTextBoxLogFileSettings.Name = "richTextBoxLogFileSettings";
+            this.richTextBoxLogFileSettings.ReadOnly = true;
+            this.richTextBoxLogFileSettings.Size = new System.Drawing.Size(348, 135);
+            this.richTextBoxLogFileSettings.TabIndex = 2;
+            this.richTextBoxLogFileSettings.Text = "";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 29F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1005, 468);
+            this.ClientSize = new System.Drawing.Size(935, 460);
             this.Controls.Add(this.menuTabControl);
             this.Controls.Add(this.lblTurbidReading);
             this.Controls.Add(this.txtReceivedMsg);
@@ -260,6 +314,8 @@
             this.aboutTabPage.ResumeLayout(false);
             this.editTabPage.ResumeLayout(false);
             this.editTabPage.PerformLayout();
+            this.logFileLocationTab.ResumeLayout(false);
+            this.logFileLocationTab.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -283,6 +339,10 @@
         private System.Windows.Forms.Label lblSetBaudRate;
         private System.Windows.Forms.ComboBox cmbBoxBaudRate;
         private System.Windows.Forms.RichTextBox richTextBoxAboutInfo;
+        private System.Windows.Forms.TabPage logFileLocationTab;
+        private System.Windows.Forms.RichTextBox richTextBoxLogFileSettings;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button btnSaveFilePath;
     }
 }
 

@@ -120,4 +120,16 @@
   <metadata name="timer1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="richTextBoxAboutInfo.Text" xml:space="preserve">
+    <value>This program requests and stores the turbidity reading that is displayed on the sc200 controller.
+If any settings need to be changed first go the "Edit Settings" page, make and save those changes.
+
+To start recording data, just click the "START" button.
+After recording of data has started you can change how frequent data is gathered by changing the time interval from the "Edit Settings" page.
+
+If the Baud Rate is ever changed, it must also be changed on the sc200 controller. This program and the controller must have matching baud rates to work.
+The COM port must match the com port used on the computer to connect to the controller. If they do not match the program will not work.
+
+Any errors are logged to a log.txt file found in the same folder as the program. By default this path is: C:\Program Files (x86)\Turbidity Program</value>
+  </data>
 </root>

@@ -1,0 +1,24 @@
+8/12/2018 11:41:53 AM
+The port 'COM3' does not exist.
+
+
+8/12/2018 11:41:53 AM
+The port 'COM3' does not exist.
+
+
+8/12/2018 11:41:54 AM
+The port 'COM3' does not exist.
+
+
+8/12/2018 11:42:08 AM
+System.InvalidOperationException: The port is closed.
+   at System.IO.Ports.SerialPort.Write(Byte[] buffer, Int32 offset, Int32 count)
+   at Turbidity.TurbidityCommunication.WriteToSP(Byte[] frame) in C:\Users\d_nko\documents\visual studio 2017\Projects\Turbidity_Project_Modbus_Protocol\Turbidity_Project_Modbus_Protocol\TurbidityCommunication.cs:line 268
+
+
+8/12/2018 11:42:17 AM
+System.InvalidOperationException: The port is closed.
+   at System.IO.Ports.SerialPort.get_BytesToRead()
+   at Turbidity.TurbidityCommunication.ReadFromSP() in C:\Users\d_nko\documents\visual studio 2017\Projects\Turbidity_Project_Modbus_Protocol\Turbidity_Project_Modbus_Protocol\TurbidityCommunication.cs:line 297
+
+

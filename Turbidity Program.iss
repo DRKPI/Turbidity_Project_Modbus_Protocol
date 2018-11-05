@@ -9,13 +9,13 @@
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{236D7ED4-FF5A-4D17-AB18-71C4378161B2}
+AppId={{A7A001D0-F596-471A-9C2F-CAF1F18820A8}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
 DefaultDirName={pf}\{#MyAppName}
 DisableProgramGroupPage=yes
-OutputBaseFilename=setup
+OutputBaseFilename=Turbidity Program Installer
 Compression=lzma
 SolidCompression=yes
 
@@ -28,6 +28,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "C:\Users\d_nko\Documents\Visual Studio 2017\Projects\Turbidity_Project_Modbus_Protocol\Turbidity_Project_Modbus_Protocol\bin\Release\Turbidity_Project_Modbus_Protocol.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\d_nko\Documents\Visual Studio 2017\Projects\Turbidity_Project_Modbus_Protocol\Turbidity_Project_Modbus_Protocol\bin\Release\Turbidity_Project_Modbus_Protocol.exe.config"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\d_nko\Documents\Visual Studio 2017\Projects\Turbidity_Project_Modbus_Protocol\Turbidity_Project_Modbus_Protocol\MIT LICENSE.txt"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
