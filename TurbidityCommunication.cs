@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-//using System.Threading.Tasks;
 using System.IO.Ports;
 using System.Threading;
 using System.IO;
@@ -12,15 +9,14 @@ namespace Turbidity
     {
         const bool DEBUG = true;
         private static SerialPort sp = null;
+        private string testReceiveMsg = "04 03 04 EF 61 3C F7 DB E9 00";
+        public string turbidNum = "";
         public byte[] buffRec { get; private set; }
         public byte[] message { get; private set; } = new byte[8];
         public string sendMsg { get; private set; }
         public string receiveMsg { get; private set; }
         public string errorMessage { get; set; } = String.Empty;
         public string secondaryErrorMsg { get; private set; } = String.Empty;
-        public string[] configData { get; set; } = new string[3];
-        private string testReceiveMsg = "04 03 04 EF 61 3C F7 DB E9 00";
-        public string turbidNum = "";
         public int timeInterval { get; private set; } = 1;
         public string onlineFilePath { get; set; } = String.Empty;
 
@@ -98,15 +94,16 @@ namespace Turbidity
         public void OpenSerialPort()
         {
             //Create a default config file
-            CreateConfigFile();
+            Turbidity_Project_Modbus_Protocol.Config.CreateConfigFile();
             //Read port, baud rate, and time interval from config file
-            ReadFromConfigFile();
+            Turbidity_Project_Modbus_Protocol.Config.ReadFromConfigFile();
+
             //Put data from configData into variables
-            string port = configData[0];
+            string port = Turbidity_Project_Modbus_Protocol.Config.configData[0];
             int baudRate = 0;
             try
             {
-                if (!int.TryParse(configData[1], out baudRate))
+                if (!int.TryParse(Turbidity_Project_Modbus_Protocol.Config.configData[1], out baudRate))
                 {
                     errorMessage = String.Empty;
                     //if could not parse let user know
@@ -121,10 +118,9 @@ namespace Turbidity
             //Set timeInterval if serial port is not already open
             if (sp == null)
             {
-                //int interval;
                 try
                 {
-                    if (!int.TryParse(configData[2], out int interval))
+                    if (!int.TryParse(Turbidity_Project_Modbus_Protocol.Config.configData[2], out int interval))
                     {
                         errorMessage = String.Empty;
                         //if could not parse let user know
@@ -138,6 +134,10 @@ namespace Turbidity
                     LogError(errorMessage = ex.Message.ToString());
                 }
             }
+
+            //TODO Read File Path from config file
+
+
             //Open the Serial Port using settings obtained from the config file
             if (!DEBUG)
             {
@@ -169,92 +169,6 @@ namespace Turbidity
                 }
             }
         }// end Function OpenSerialPort
-
-        /// <summary>
-        /// Create a default config file and store settings in file
-        /// </summary>
-        private void CreateConfigFile()
-        {
-            string path = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "config.txt");
-
-            try
-            {
-                //If config.txt does not exist create with the following information
-                if (!File.Exists(path))
-                {
-                    //Create default text to write to file
-                    string defaultConfigFile = "Configuration Information"
-                    + Environment.NewLine + "-----------------------------"
-                    + Environment.NewLine + "If the com port is ever changed on the computer then it needs to be updated here (line 13) as well."
-                    + Environment.NewLine + "\tIn order for the program to work the com port listed in this file must match the com port used on computer."
-                    + Environment.NewLine + "\tIf not sure of which com port is being used, look in Device Manager --> Ports"
-                    + Environment.NewLine + "The baud rate here (line 13), and on the Turbidity device (sc200) must match, please check both locations to verify."
-                    + Environment.NewLine + "\tFrom the sc200 controller home screen, choose Network Setup --> Baud Rate"
-                    + Environment.NewLine + "\tFor RS232 connection, 9600 baud rate is best, but it can also go up to 19200 baud rate."
-                    + Environment.NewLine + "The time interval (line 13) is for how often you want to grab a turbidity reading from your device."
-                    + Environment.NewLine + "\tThis can be anytime from 1 min up to 60 min."
-                    + Environment.NewLine
-                    + Environment.NewLine + "Important Notes - There cannot be an empty/blank line at the end of file. The program will not read in data correctly."
-                    + Environment.NewLine + "\tPlease make sure no extra lines and/or spaces are after the \"Time Interval\""
-                    + Environment.NewLine
-                    + Environment.NewLine + "*********CONFIGURATION INFORMATION*********"
-                    + Environment.NewLine + "COM PORT\tBAUD RATE\tTIME INTERVAL"
-                    + Environment.NewLine + "COM3\t\t9600\t\t60";
-                    //Write to file
-                    using (StreamWriter file = new StreamWriter(path))
-                    {
-                        file.Write(defaultConfigFile);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                errorMessage = String.Empty;
-                //Log any error message
-                LogError(errorMessage = ex.Message.ToString());
-            }
-        }// end Function CreateConfigFile
-
-        /// <summary>
-        /// Read data in from config file and save in configData[]
-        /// </summary>
-        private void ReadFromConfigFile()
-        {
-            string path = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "config.txt");
-
-            try
-            {
-                // Create an instance of StreamReader to read from a file.
-                // The using statement also closes the StreamReader.
-                using (StreamReader sr = new StreamReader(path))
-                {
-                    string line;
-
-                    // Read and store in array from the file until 
-                    // the end of the file is reached. 
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        //Get only line of data needed (last line of file, cannot have empty lines at end) and put in configData array
-                        if (sr.Peek() == -1)
-                        {
-                            //Remove tabs and spaces then save in configData
-                            string tempLine = line.Replace("\t", " ");
-                            while (tempLine.IndexOf("  ") > 0)
-                            {
-                                tempLine = tempLine.Replace("  ", " ");
-                            }
-                            configData = tempLine.Split();
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                errorMessage = String.Empty;
-                //Log any error message
-                LogError(errorMessage = ex.Message.ToString());
-            }
-        }// end Function readFromConfigFile
         
         /// <summary>
         /// Send package over the serial port
@@ -392,7 +306,7 @@ namespace Turbidity
             string year = DateTime.Parse(DateTime.Now.ToString()).Year.ToString();
             string localStoragePath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, year + "_Turbidity_Readings.txt");
             //TODO: allow user to choose path for storing online
-            string onlineStoragePath = onlineFilePath + year + "_Turbidity_Readings.txt";
+            string onlineStoragePath = onlineFilePath + "\\" + year + "_Turbidity_Readings.txt";
 
             //Save locally
             //Check if file exist, if not then create file with header information
@@ -484,47 +398,6 @@ namespace Turbidity
                 LogError(errorMessage = Environment.NewLine + ex.ToString());
             }
         }// end Function WriteTurbidDataToFile
-
-        /// <summary>
-        /// Takes user input from configData and updates config file
-        /// </summary>
-        public void updateConfigFile()
-        {
-            string path = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "config.txt");
-            string defaultConfigFile = "Configuration Information"
-                    + Environment.NewLine + "-----------------------------"
-                    + Environment.NewLine + "If the com port is ever changed on the computer then it needs to be updated here (line 17) as well."
-                    + Environment.NewLine + "\tIn order for the program to work the com port listed in this file must match the com port used on computer."
-                    + Environment.NewLine + "\tIf not sure of which com port is being used, look in Device Manager --> Ports"
-                    + Environment.NewLine + "The baud rate here (line 17), and on the Turbidity device (sc200) must match, please check both locations to verify."
-                    + Environment.NewLine + "\tFrom the sc200 controller home screen, choose Network Setup --> Baud Rate"
-                    + Environment.NewLine + "\tFor RS232 connection, 9600 baud rate is best, but it can also go up to 19200 baud rate."
-                    + Environment.NewLine + "The time interval (line 17) is for how often you want to grab a turbidity reading from your device."
-                    + Environment.NewLine + "\tThis can be anytime from 1 min up to 60 min."
-                    + Environment.NewLine
-                    + Environment.NewLine + "Important Notes - There cannot be an empty/blank line at the end of file. The program will not read in data correctly."
-                    + Environment.NewLine + "\tPlease make sure no extra lines and/or spaces are after the time in minutes"
-                    + Environment.NewLine
-                    + Environment.NewLine + "*********CONFIGURATION INFORMATION*********"
-                    + Environment.NewLine + "COM PORT\tBAUD RATE\tTIME INTERVAL"
-                    + Environment.NewLine + configData[0] + "\t\t" + configData[1] + "\t\t" + configData[2];// configData[0] is port, configData[1] is baud rate, and configData[2] is time interval
-            //Would like to only write out only the last line of this file. Suggestions I've seen online all talk about reading in each line and queueing them up. Seems to be as much time and 
-            // memory as just rewriting the file, so I chose to just rewrite the file
-            try
-            {
-                //Write to file
-                using (StreamWriter file = new StreamWriter(path))
-                {
-                    file.Write(defaultConfigFile);
-                }
-            }
-            catch (Exception ex)
-            {
-                errorMessage = String.Empty;
-                //Log any error message
-                LogError(errorMessage = ex.Message.ToString());
-            }
-        }// end Function updateConfigFile
 
         /// <summary>
         /// Log error message out to file

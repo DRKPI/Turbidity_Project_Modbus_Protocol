@@ -13,5 +13,5 @@ Important Notes - There cannot be an empty/blank line at the end of file. The pr
 	Please make sure no extra lines and/or spaces are after the time in minutes
 
 *********CONFIGURATION INFORMATION*********
-COM PORT	BAUD RATE	TIME INTERVAL	SAVED DATA LOCATION
-COM3		9600		2		
+COM PORT	BAUD RATE	TIME INTERVAL
+COM3		1200		5

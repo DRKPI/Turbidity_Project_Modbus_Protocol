@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO.Ports;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
 
@@ -38,7 +31,7 @@ namespace Turbidity
             try
             {
                 //Set timer interval
-                timer1.Interval = int.Parse(turbidity.configData[2]) * 60000;
+                timer1.Interval = int.Parse(Turbidity_Project_Modbus_Protocol.Config.configData[2]) * 60000;
             }
             catch (Exception ex)
             {
@@ -77,9 +70,7 @@ namespace Turbidity
             this.btnSaveConfigInput.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
             this.aboutTabPage.BackColor = System.Drawing.Color.FromArgb(0, 132, 61);
             this.richTextBoxAboutInfo.BackColor = System.Drawing.Color.FromArgb(0, 132, 61);
-            this.logFileLocationTab.BackColor = System.Drawing.Color.FromArgb(0, 132, 61);
-            this.richTextBoxLogFileSettings.BackColor = System.Drawing.Color.FromArgb(0, 132, 61);
-
+            
             //Call Function to build Modbus request message
             turbidity.BuildMessage();
 
@@ -210,19 +201,19 @@ namespace Turbidity
                 if (okSave)
                 {
                     //Write new settings out to config file
-                    turbidity.updateConfigFile();
+                    Turbidity_Project_Modbus_Protocol.Config.updateConfigFile();
 
                     //Give feedback to user that settings are saved
                     MessageBox.Show("Settings saved correctly", "Save Successful", MessageBoxButtons.OK);
                     okSave = false;
 
                     //reset timer1 to new input if it has changed
-                    if (turbidity.timeInterval != int.Parse(turbidity.configData[2]))
+                    if (turbidity.timeInterval != int.Parse(Turbidity_Project_Modbus_Protocol.Config.configData[2]))
                     {
                         try
                         {
                             timer1.Enabled = false;
-                            timer1.Interval = int.Parse(turbidity.configData[2]) * 60000;
+                            timer1.Interval = int.Parse(Turbidity_Project_Modbus_Protocol.Config.configData[2]) * 60000;
                             timer1.Enabled = true;
                         }
                         catch (Exception ex)
@@ -268,7 +259,7 @@ namespace Turbidity
             if (correctComPort)
             {
                 txtBoxComPort.CharacterCasing = CharacterCasing.Upper;
-                turbidity.configData[0] = txtBoxComPort.Text;
+                Turbidity_Project_Modbus_Protocol.Config.configData[0] = txtBoxComPort.Text;
                 changesMade = true;
                 okSave = true;
             }
@@ -285,7 +276,7 @@ namespace Turbidity
             //Check if Baud Rate has been changed, if so grab changes
             if (!string.IsNullOrWhiteSpace(cmbBoxBaudRate.Text))
             {
-                turbidity.configData[1] = cmbBoxBaudRate.Text;
+                Turbidity_Project_Modbus_Protocol.Config.configData[1] = cmbBoxBaudRate.Text;
                 changesMade = true;
                 okSave = true;
             }
@@ -295,8 +286,8 @@ namespace Turbidity
             {
                 if (txtBoxTimeInterval.Text != "0")
                 {
-                    turbidity.configData[2] = txtBoxTimeInterval.Text;
-                    if (int.TryParse(turbidity.configData[2], out int interval))
+                    Turbidity_Project_Modbus_Protocol.Config.configData[2] = txtBoxTimeInterval.Text;
+                    if (int.TryParse(Turbidity_Project_Modbus_Protocol.Config.configData[2], out int interval))
                     {
                         checkInterval = interval;
                         okSave = true;
@@ -320,7 +311,7 @@ namespace Turbidity
             }
         }// end function verifyInput
 
-        private void btnSaveFilePath_Click(object sender, EventArgs e)
+        private void btnChangeOnlineFilePath_Click(object sender, EventArgs e)
         {
             try
             {
@@ -341,7 +332,31 @@ namespace Turbidity
                 turbidity.LogError(turbidity.errorMessage = Environment.NewLine + ex.ToString());
             }
 
-            //MessageBox.Show(turbidity.onlineFilePath.ToString());
+            //TODO call a function to check if file path has been changed and save it to the config file.
+            //Let user know that config file has been updated
+
         }
+
+        //private void changeOnlineFilePath_Click(object sender, EventArgs e)
+        //{
+        //    try
+        //    {
+        //        FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+        //        DialogResult result = folderBrowserDialog.ShowDialog();
+
+        //        if (result == DialogResult.OK)
+        //        {
+        //            turbidity.onlineFilePath = folderBrowserDialog.SelectedPath;
+
+        //            //TODO: output message that file path change saved correctly
+        //            MessageBox.Show("Saved correctly");
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        turbidity.errorMessage = String.Empty;
+        //        turbidity.LogError(turbidity.errorMessage = Environment.NewLine + ex.ToString());
+        //    }
+        //}// end function btnSaveFilePath_Click
     }// end class Form1
 }// end namespace Turbidity
