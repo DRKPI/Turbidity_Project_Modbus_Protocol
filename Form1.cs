@@ -321,7 +321,8 @@ namespace Turbidity
                 if (result == DialogResult.OK)
                 {
                     turbidity.onlineFilePath = folderBrowserDialog.SelectedPath;
-
+                    Turbidity_Project_Modbus_Protocol.Config.configData[3] = turbidity.onlineFilePath;
+                    Turbidity_Project_Modbus_Protocol.Config.updateConfigFile();
                     //TODO: output message that file path change saved correctly
                     MessageBox.Show("Saved correctly");
                 }

@@ -14,4 +14,4 @@ Important Notes - There cannot be an empty/blank line at the end of file. The pr
 
 *********CONFIGURATION INFORMATION*********
 COM PORT	BAUD RATE	TIME INTERVAL	SAVED DATA LOCATION
-COM3		9600		2		
+COM1		1200		1		C:\Users\d_nko\Desktop

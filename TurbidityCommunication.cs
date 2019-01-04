@@ -306,6 +306,7 @@ namespace Turbidity
             string year = DateTime.Parse(DateTime.Now.ToString()).Year.ToString();
             string localStoragePath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, year + "_Turbidity_Readings.txt");
             //TODO: allow user to choose path for storing online
+            onlineFilePath = Turbidity_Project_Modbus_Protocol.Config.configData[3];
             string onlineStoragePath = onlineFilePath + "\\" + year + "_Turbidity_Readings.txt";
 
             //Save locally
